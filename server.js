@@ -103,7 +103,7 @@ io.on('connection', (socket) => {
       }
     }
     
-    setTimeout(intervalFunc, 5500, 'funky');
+    setTimeout(intervalFunc, 6500, 'funky');
    })
   const storage1=multer.memoryStorage({
     destination(req,file,callback){
