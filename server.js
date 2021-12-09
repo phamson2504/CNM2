@@ -285,7 +285,7 @@ app.post("/dangki", upload.fields([]), (req, res) => {
                 subject: "appchat -xac minh email",
                 html: `<h2>${param.ten}! Cam on da dang ky tai khoan </h2>
                           <h4>Nhan duong link phia duoi de xac minh tai khoan..</h4>
-                          <a href="http://localhost:3000/verify-email?token=${param.emailToken}">Xac minh tai khoan</a>`,
+                          <a https://congnghemoi1.herokuapp.com/verify-email?token=${param.emailToken}">Xac minh tai khoan</a>`,
               };
               tranporter.sendMail(mailOptions, function (err, info) {
                 if (err) {
@@ -393,7 +393,7 @@ app.post("/mail-reset-pass", upload.fields([]), (req, res) => {
           to: data[0].email,
           subject: "Reset Password Link - ChatApp",
           html: `<h4>Nhan duong link phia duoi de thay doi mat khau..</h4>
-       <a href="http://localhost:3000/reset-password?token=${token}">Thay Doi Mat Khau</a>`,
+       <a href="https://congnghemoi1.herokuapp.com/reset-password?token=${token}">Thay Doi Mat Khau</a>`,
         };
         db.query(
           "Update Users set emailToken = ? where sdt = ?",
@@ -479,7 +479,7 @@ app.post("/mail-unlocked", upload.fields([]), (req, res) => {
           to: data[0].email,
           subject: "UnLocked Account Link - ChatApp",
           html: `<h4>Nhan duong link phia duoi de mo khoa tai khoan..</h4>
-       <a href="http://localhost:3000/unlocked?token=${logToken}">Mo khoa tai khoan</a>`,
+       <a href="https://congnghemoi1.herokuapp.com/unlocked?token=${logToken}">Mo khoa tai khoan</a>`,
         };
         tranporter.sendMail(mailOptions, function (err, info) {
           if (err) {
