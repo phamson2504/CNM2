@@ -186,7 +186,7 @@ var db= mysql.createConnection({
   // user: "root",
   // password: "nhatban1",
   // database: "baitap"
-  host: "",
+  host: "baitapnhomcnm.crkxbwz5flrz.ap-southeast-1.rds.amazonaws.com",
   port: "3306",
   user: "admin",
   password: "Nhatban1",
@@ -203,7 +203,7 @@ var db= mysql.createConnection({
   // user: "root",
   // password: "nhatban1",
   // database: "baitap"
-  host: "",
+  host: "baitapnhomcnm.crkxbwz5flrz.ap-southeast-1.rds.amazonaws.com",
   port: "3306",
   user: "admin",
   password: "Nhatban1",
