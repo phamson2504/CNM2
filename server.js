@@ -753,7 +753,11 @@ app.post("/guiMess",upload.fields([]),(req,res)=>{
 })
 // them vao danh sach dang gui loi moi ket ban
 app.get("/them/:idGui/:idNhan",(req,res)=>{
-  
+  let sqlChat = "select * from Frends where (iduser = "+req.params.idGui+" and idNhan = "+req.params.idNhan+") or (iduser = "+  req.params.idNhan+" and idNhan = "+req.params.idGui+")";
+  let chatArr = syncSql.mysql(config,sqlChat).data.rows;
+  let sqlCNA = "select * from Chapnhanadd where (idGui = "+req.params.idGui+" and idNhan = "+req.params.idNhan+") or (idGui = "+  req.params.idNhan+" and idNhan = "+req.params.idGui+")"
+  let arrCNA = syncSql.mysql(config,sqlCNA).data.rows;
+  if(chatArr.length==0&& arrCNA.length==0){
     let sql1 = 'INSERT INTO  Chapnhanadd  set ?';
     let param={
         idGui:req.params.idGui,
@@ -764,7 +768,7 @@ app.get("/them/:idGui/:idNhan",(req,res)=>{
         if(err){
             console.log(err)}
     })
-  
+  }
   res.redirect(`/trangchu/${req.params.idGui}`)
 })
 
