@@ -29,8 +29,8 @@ const uploadImage = multer({
   limits:{fileSize:2000000},
 })
 const s3= new AWS.S3({
-  accessKeyId:'',
-  secretAccessKey:'',
+  accessKeyId:'AKIAV76VXQMSB2TFD3FR',
+  secretAccessKey:'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',
 })
 //tao server io
 const http = require('http');
