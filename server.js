@@ -152,13 +152,10 @@ io.on('connection', (socket) => {
           console.log(err);
           return res.send("loi upload anh");
         }else{
-      
+       res.redirect(`trangchu/${req.body.id}`)
         }
       });
-      function intervalFunc() {
-        res.redirect(`trangchu/${req.body.id}`)
-      }
-      setTimeout(intervalFunc, 3000, 'funky');
+    
   })
   
  
