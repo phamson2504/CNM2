@@ -26,7 +26,7 @@ const storage = multer.diskStorage({
 });
 const uploadImage = multer({
   storage : storage,
-  limits:{fileSize:2000000},
+  limits:{fileSize:3000000},
 })
 const s3= new AWS.S3({
   accessKeyId:'AKIAV76VXQMSB2TFD3FR',
