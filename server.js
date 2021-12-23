@@ -81,30 +81,6 @@ io.on('connection', (socket) => {
           console.log("1 record inserted");
       });
   })
-  socket.on("sendFile",({senderId,idRoom,image})=>{
-    const user =getUser(senderId);
-    console.log(users)
-    let iRoomZ = user.idRoom;
-    function intervalFunc() {
-     
-      console.log("da send")
-      let sql = "select * from messages ORDER BY id DESC LIMIT 1;";
-      let  hinhanh = syncSql.mysql(config,sql).data.rows;
-      if(user!=null){
-        io.to(iRoomZ).emit("getMess",{
-          image,
-          senderId,
-          text: hinhanh[0].Texts,
-          time
-          
-        })
-  
-       
-      }
-    }
-    
-    setTimeout(intervalFunc, 13500, 'funky');
-   })
   const storage1=multer.memoryStorage({
     destination(req,file,callback){
         callback(null,'');
@@ -114,51 +90,86 @@ io.on('connection', (socket) => {
     storage1,
     limits:{fileSize:2000000},
   })
-  app.post("/sendfile",upload1.single('sendfile'),(req,res)=>{
-    const image =req.file.originalname.split(".")
-    const filetype = image[image.length-1];
-    const filePath = `${uuid()+Date.now().toString()}.${filetype}`;
-    let sql1 = 'INSERT INTO  messages  set ?';
-    let param
-   
-    if(req.body.idRoom!="")
-      param={
-        idTroChuyen:req.body.idRoom,
-        idSender:req.body.id,
-        Texts:filePath,
-        times:time
-    }
-    if(req.body.idRoomNC!="")
-      param={
-        idTroChuyen:req.body.idRoomNC,
-        idSender:req.body.id,
-        Texts:filePath,
-        times:time
-    }
-      console.log(req.body.idRoom)
-      db.query(sql1,param,(err,data)=>{
-          if(err){
-              console.log(err)}
-      })
-      const params1={
-        Bucket:"baitap.gg",
-        Key: filePath,
-        Body:req.file.buffer,
-        acl: 'public-read',
+   socket.on("sendFile", ({senderId,idRoom,image})=>{
+    const user =getUser(senderId);
+    senderT=senderId;
+    imageT=image;
+    iRoomZ = user.idRoom;
+    console.log("sendID"+senderId)
+    let sql = "select * from messages ORDER BY id DESC LIMIT 1;";
+    let  hinhanh = syncSql.mysql(config,sql).data.rows;
+    
+    
+    app.post("/sendfile", upload1.single('sendfile'), (req, res) => {
 
-    }
-    s3.upload(params1,(err,data)=>{
-      if(err){
+      const image1 = req.file.originalname.split(".");
+      const filetype = image1[image1.length - 1];
+      const filePath = `${uuid() + Date.now().toString()}.${filetype}`;
+      let sql1 = 'INSERT INTO  messages  set ?';
+      let param;
+      let idTroch=null;
+      if (req.body.idRoom != ""){
+        idTroch=req.body.idRoom;
+        param = {
+          idTroChuyen: req.body.idRoom,
+          idSender: req.body.id,
+          Texts: filePath,
+          times: time
+        };
+      }
+    
+      if (req.body.idRoomNC != ""){
+        idTroch=req.body.idRoomNC;
+        param = {
+          idTroChuyen: req.body.idRoomNC,
+          idSender: req.body.id,
+          Texts: filePath,
+          times: time
+        };
+      }
+      db.query(sql1, param, (err, data) => {
+        if (err) {
           console.log(err);
-          return res.send("loi upload anh");
-        }else{
-       res.redirect(`trangchu/${req.body.id}`)
         }
       });
+      const params1 = {
+        Bucket: "baitap.gg",
+        Key: filePath,
+        Body: req.file.buffer,
+        acl: 'public-read',
+      };
+      s3.upload(params1, (err, data) => {
+        if (err) {
+          console.log(err);
+          return res.send("loi upload anh");
+        } else {
+          senderId=req.body.id;
+          let userme = "select * from Users where id = "+req.body.id+"";
+          let datauserme = syncSql.mysql(config,userme).data.rows;
+          image=datauserme[0].anh;
+          console.log(image)
+          console.log("da send")
+          iRoomZ=idTroch;
+          
+          function intervalFunc() {
+            io.to(iRoomZ).emit("getMess",{
+              image,
+              senderId,
+              text: filePath,
+              time
+              
+            })
+            console.log("//////////"+image+"////////"+senderId+"/////"+iRoomZ);
+          }
+          setTimeout(intervalFunc, 7500, 'funky');
+          res.redirect(`trangchu/${req.body.id}`);
+        }
+      });
+
+    })
     
-  })
-  
- 
+    
+   })
   
   socket.on('disconnect', () => {
     const index = users.findIndex(user => user.socketId === socket.id);
@@ -384,7 +395,10 @@ app.post("/mail-reset-pass", upload.fields([]), (req, res) => {
       console.log(err);
     } else {
       if (data.length > 0) {
-        var token = crypto.randomBytes(64).toString("hex");
+        var id = data[0].id;
+        var token = jwt.sign({ id }, "" + process.env.ACCESS_TOKEN_SECRET, {
+          expiresIn: "24h",
+      });;
         let mailOptions = {
           from: "Chat-app",
           to: data[0].email,
