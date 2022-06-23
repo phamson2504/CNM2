@@ -189,16 +189,16 @@ app.set('view engine','ejs');
 app.set('views','./views');
 
 var db= mysql.createConnection({
-  // host: "localhost",
-  // port: "3306",
-  // user: "root",
-  // password: "nhatban1",
-  // database: "baitap"
-  host: "",
+  host: "localhost",
   port: "3306",
-  user: "admin",
-  password: "Nhatban1",
+  user: "root",
+  password: "nhatban1",
   database: "baitap"
+//   host: "",
+//   port: "3306",
+//   user: "admin",
+//   password: "Nhatban1",
+//   database: "baitap"
   });
 
   db.connect(function(err) {
@@ -206,16 +206,16 @@ var db= mysql.createConnection({
     console.log("Connected!");
   });
    var config = {
-  //   host: "localhost",
-  // port: "3306",
-  // user: "root",
-  // password: "nhatban1",
-  // database: "baitap"
-  host: "",
+  host: "localhost",
   port: "3306",
-  user: "admin",
-  password: "Nhatban1",
+  user: "root",
+  password: "nhatban1",
   database: "baitap"
+//   host: "",
+//   port: "3306",
+//   user: "admin",
+//   password: "Nhatban1",
+//   database: "baitap"
    }
 
   global.db = db;
